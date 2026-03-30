@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Delhi NCR Deal-Sourcing Network — Stellaris VP</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #18181f;
+    --border: rgba(255,255,255,0.07);
+    --accent: #e8c547;
+    --accent2: #4fc3a1;
+    --text: #f0ede8;
+    --muted: #6b6b7a;
+    --t1: #e8c547;
+    --t2: #4fc3a1;
+    --card-hover: rgba(232, 197, 71, 0.04);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* Header */
+  header {
+    padding: 52px 60px 40px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 40px;
+  }
+
+  .header-left {}
+
+  .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 3.5vw, 44px);
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  h1 span {
+    color: var(--accent);
+  }
+
+  .header-meta {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 10px;
+    line-height: 1.6;
+  }
+
+  .header-stats {
+    display: flex;
+    gap: 32px;
+    flex-shrink: 0;
+  }
+
+  .stat {
+    text-align: right;
+  }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    margin-top: 4px;
+  }
+
+  /* Controls */
+  .controls {
+    padding: 0 60px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(10,10,15,0.92);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(20px);
+  }
+
+  .controls-top {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 0 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .controls-bottom {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0 12px;
+    flex-wrap: wrap;
+  }
+
+  .filter-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    flex-shrink: 0;
+    width: 52px;
+  }
+
+  .filter-divider {
+    width: 1px;
+    height: 16px;
+    background: var(--border);
+    flex-shrink: 0;
+  }
+
+  .search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+    max-width: 280px;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  input[type="search"] {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 14px 8px 36px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  input[type="search"]::placeholder { color: var(--muted); }
+  input[type="search"]:focus { border-color: rgba(232,197,71,0.4); }
+
+  .filter-group {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    padding: 6px 13px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .filter-btn:hover {
+    border-color: rgba(232,197,71,0.3);
+    color: var(--text);
+  }
+
+  .filter-btn.active {
+    background: rgba(232,197,71,0.1);
+    border-color: rgba(232,197,71,0.5);
+    color: var(--accent);
+  }
+
+  .filter-btn.active[data-persona="angel"] { background: rgba(192,132,252,0.1); border-color: rgba(192,132,252,0.4); color: #c084fc; }
+  .filter-btn.active[data-persona="micro-vc"] { background: rgba(249,115,22,0.1); border-color: rgba(249,115,22,0.4); color: #f97316; }
+  .filter-btn.active[data-persona="incubator"] { background: rgba(56,189,248,0.1); border-color: rgba(56,189,248,0.4); color: #38bdf8; }
+  .filter-btn.active[data-persona="community"] { background: rgba(74,222,128,0.1); border-color: rgba(74,222,128,0.4); color: #4ade80; }
+  .filter-btn.active[data-persona="professional"] { background: rgba(251,113,133,0.1); border-color: rgba(251,113,133,0.4); color: #fb7185; }
+  .filter-btn.active[data-persona="family-office"] { background: rgba(251,191,36,0.1); border-color: rgba(251,191,36,0.4); color: #fbbf24; }
+  .filter-btn.active[data-persona="network"] { background: rgba(167,139,250,0.1); border-color: rgba(167,139,250,0.4); color: #a78bfa; }
+
+  .result-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  /* Main layout */
+  .main {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    min-height: calc(100vh - 200px);
+  }
+
+  /* Card grid */
+  .card-area {
+    padding: 32px 40px 60px 60px;
+    border-right: 1px solid var(--border);
+  }
+
+  /* Section header */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    margin-top: 32px;
+  }
+
+  .section-header:first-child { margin-top: 0; }
+
+  .section-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .section-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    background: var(--surface2);
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+
+  /* Cards */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: transparent;
+    transition: background 0.2s;
+  }
+
+  .card.tier-1::before { background: var(--t1); }
+  .card.tier-2::before { background: var(--t2); }
+
+  .card:hover {
+    background: var(--card-hover);
+    border-color: rgba(232,197,71,0.2);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+
+  .card.active {
+    background: rgba(232,197,71,0.05);
+    border-color: rgba(232,197,71,0.35);
+  }
+
+  .card.hidden { display: none; }
+
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+
+  .card-rank {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    background: var(--surface2);
+    padding: 2px 7px;
+    border-radius: 4px;
+  }
+
+  .tier-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.05em;
+  }
+
+  .tier-badge.t1 {
+    background: rgba(232,197,71,0.12);
+    color: var(--t1);
+    border: 1px solid rgba(232,197,71,0.25);
+  }
+
+  .tier-badge.t2 {
+    background: rgba(79,195,161,0.1);
+    color: var(--t2);
+    border: 1px solid rgba(79,195,161,0.2);
+  }
+
+  .card-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 3px;
+  }
+
+  .card-role {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.4;
+    margin-bottom: 12px;
+  }
+
+  .card-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: var(--surface2);
+    color: var(--muted);
+    letter-spacing: 0.03em;
+    border: 1px solid var(--border);
+  }
+
+  .tag.persona {
+    background: rgba(255,255,255,0.04);
+    color: rgba(255,255,255,0.5);
+  }
+
+  .card-key-line {
+    font-size: 12px;
+    color: rgba(240,237,232,0.55);
+    margin-top: 10px;
+    line-height: 1.5;
+    border-top: 1px solid var(--border);
+    padding-top: 10px;
+  }
+
+  /* Detail panel */
+  .detail-panel {
+    padding: 32px;
+    position: sticky;
+    top: 73px;
+    height: calc(100vh - 73px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .detail-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 16px;
+    text-align: center;
+    opacity: 0.4;
+  }
+
+  .detail-empty-icon {
+    font-size: 32px;
+    opacity: 0.3;
+  }
+
+  .detail-empty p {
+    font-size: 13px;
+    color: var(--muted);
+    max-width: 200px;
+    line-height: 1.6;
+  }
+
+  .detail-content { display: none; }
+  .detail-content.visible { display: block; }
+
+  .detail-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .detail-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 4px;
+  }
+
+  .detail-role {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .detail-section {
+    margin-bottom: 20px;
+  }
+
+  .detail-section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 7px;
+  }
+
+  .detail-section-value {
+    font-size: 13px;
+    line-height: 1.6;
+    color: rgba(240,237,232,0.8);
+  }
+
+  .detail-section-value.highlight {
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .detail-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .detail-tag {
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 5px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: rgba(240,237,232,0.6);
+  }
+
+  .referral-bar {
+    height: 6px;
+    border-radius: 3px;
+    background: var(--surface2);
+    margin-top: 6px;
+    overflow: hidden;
+  }
+
+  .referral-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--accent2), var(--accent));
+    transition: width 0.6s ease;
+  }
+
+  .intro-path {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 12px;
+    color: rgba(240,237,232,0.7);
+    line-height: 1.5;
+  }
+
+  .linkedin-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 16px;
+    padding: 9px 16px;
+    border: 1px solid rgba(232,197,71,0.3);
+    border-radius: 7px;
+    color: var(--accent);
+    font-size: 12px;
+    text-decoration: none;
+    transition: all 0.15s;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .linkedin-btn:hover {
+    background: rgba(232,197,71,0.08);
+    border-color: rgba(232,197,71,0.5);
+  }
+
+
+  /* Insight banner */
+  .insight-banner {
+    margin: 0 60px 0;
+    padding: 20px 24px;
+    border: 1px solid rgba(232,197,71,0.15);
+    border-radius: 10px;
+    background: rgba(232,197,71,0.04);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    border-top: none;
+    padding-top: 28px;
+  }
+
+  .insight-item {}
+
+  .insight-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .insight-value {
+    font-size: 13px;
+    line-height: 1.5;
+    color: rgba(240,237,232,0.75);
+  }
+
+  .no-results {
+    padding: 60px 0;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+    display: none;
+  }
+
+  @media (max-width: 1100px) {
+    .main { grid-template-columns: 1fr; }
+    .detail-panel { display: none; }
+    header { padding: 32px 24px 24px; flex-wrap: wrap; }
+    .controls { padding: 0 24px; }
+    .controls-top { flex-wrap: wrap; gap: 10px; }
+    .filter-label { display: none; }
+    .filter-divider { display: none; }
+    .card-area { padding: 24px; }
+    .insight-banner { margin: 0 24px; grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="eyebrow">Stellaris Venture Partners · Deal Sourcing Intelligence</div>
+    <h1>Delhi NCR <span>Network Map</span></h1>
+    <div class="header-meta">28 high-access individuals curated for early-stage deal flow · Idea → Series A</div>
+  </div>
+  <div class="header-stats">
+    <div class="stat">
+      <div class="stat-num">28</div>
+      <div class="stat-label">Contacts</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">14</div>
+      <div class="stat-label">Tier 1</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">7</div>
+      <div class="stat-label">Personas</div>
+    </div>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="controls-top">
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input type="search" id="search" placeholder="Search by name, org, sector…">
+    </div>
+    <div class="filter-divider"></div>
+    <span class="filter-label">Tier</span>
+    <div class="filter-group" id="tier-filters">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="tier-1">Tier 1</button>
+      <button class="filter-btn" data-filter="tier-2">Tier 2</button>
+    </div>
+    <span class="result-count" id="result-count">28 shown</span>
+  </div>
+  <div class="controls-bottom">
+    <span class="filter-label">Persona</span>
+    <div class="filter-group" id="persona-filters">
+      <button class="filter-btn active" data-persona="all-personas">All</button>
+      <button class="filter-btn" data-persona="angel">Angel / Founder-Angel</button>
+      <button class="filter-btn" data-persona="micro-vc">Micro-VC</button>
+      <button class="filter-btn" data-persona="incubator">Incubator / Accelerator</button>
+      <button class="filter-btn" data-persona="community">Community Builder</button>
+      <button class="filter-btn" data-persona="professional">Lawyer / CFO</button>
+      <button class="filter-btn" data-persona="family-office">Family Office</button>
+      <button class="filter-btn" data-persona="network">Angel Network</button>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="card-area" id="card-area">
+    <div class="no-results" id="no-results">No contacts match your filters.</div>
+    <!-- Cards rendered by JS -->
+  </div>
+
+  <div class="detail-panel" id="detail-panel">
+    <div class="detail-empty" id="detail-empty">
+      <div class="detail-empty-icon">◈</div>
+      <p>Select a contact to view detailed profile</p>
+    </div>
+    <div class="detail-content" id="detail-content">
+      <!-- Filled by JS -->
+    </div>
+  </div>
+</div>
+
+<div class="insight-banner">
+  <div class="insight-item">
+    <div class="insight-label">Highest ROI category</div>
+    <div class="insight-value">Feeder funds (Zeropearl, IPV, Faad) — their business model <em>requires</em> passing deals to seed VCs</div>
+  </div>
+  <div class="insight-item">
+    <div class="insight-label">Most underrated category</div>
+    <div class="insight-value">Startup lawyers & CFOs (Wadhwa, AnBac, StartupFino) see founders at Day 0, before any VC does</div>
+  </div>
+</div>
+
+<script>
+const people = [
+  {
+    rank: 1, name: "Bipin Shah", org: "Zeropearl VC", role: "Founder & Solo GP", tier: "t1",
+    persona: "micro-vc", location: "Gurugram",
+    sectors: ["Consumer", "Fintech", "Tech"], stage: "Pre-seed",
+    why: "The single most complementary relationship. Zeropearl's Rs 159 Cr Fund I closed Sep 2025, oversubscribed 3.5x. 52% of LPs are founders (18 unicorn founders, 21 IPO-listed entrepreneurs). His explicit model is helping portfolio companies raise seed rounds within 15 months.",
+    evidence: "18+ portfolio companies deployed including Gully Labs, Supply6, Cura Care (Dec 2025), ONYA (Nov 2025). Ex-Managing Partner at Titan Capital where he scaled portfolio from 20 to 300+.",
+    referral: 98, referralNote: "Extremely high — his business model requires downstream VCs like Stellaris for follow-on. Not competitive whatsoever.",
+    intro: "Former Titan Capital — Kunal Bahl/Rohit Bansal connection. Shared LP/founder network.",
+    linkedin: "https://in.linkedin.com/in/bipinzeropearl"
+  },
+  {
+    rank: 2, name: "Vinay Bansal", org: "Inflection Point Ventures", role: "Founder & CEO, IPV; Partner, Physis Capital", tier: "t1",
+    persona: "micro-vc", location: "Gurgaon",
+    sectors: ["Consumer Tech", "Fintech", "SaaS", "Commerce"], stage: "Angel → Pre-Series A",
+    why: "IPV is Delhi NCR's largest angel network: 24,000+ members, 170+ investments, Rs 550+ Cr deployed. 14 exits in 2024 at 36% IRR. Portfolio includes BharatPe (unicorn). IPV explicitly connects portfolio founders with institutional VCs.",
+    evidence: "Publicly stated IPV 'plays an active role in connecting start-up founders from our portfolio with large VCs for follow-on rounds.' Launched IPV International ($110M fund, 2025).",
+    referral: 95, referralNote: "Extremely high — explicitly refers founders to institutional VCs as part of the platform's value prop.",
+    intro: "Shared portfolio company referrals; TiE Delhi-NCR events; IPV Demo Days.",
+    linkedin: "https://in.linkedin.com/in/vinay-bansal-383b035"
+  },
+  {
+    rank: 3, name: "Rajesh Sawhney", org: "GSF India", role: "Founder & General Partner; Board, IndiaMART & ixigo", tier: "t1",
+    persona: "angel", location: "Gurgaon / New Delhi",
+    sectors: ["SaaS", "Enterprise Software", "AI", "Healthtech", "Consumer"], stage: "Pre-seed, Seed",
+    why: "135+ angel investments including Whatfix, Quizizz, Slintel (acquired by 6sense). GSF Founders Academy runs Winter and Summer cohorts with 500+ investor Demo Days. Sees pre-seed founders 12–18 months before institutional capital.",
+    evidence: "Whatfix (co-invested with Stellaris), Slintel (exit), Quizizz. GSF Spring Festival 2026 confirms ongoing activity. Alok Goyal is listed as a GSF VC Mentor — existing Stellaris relationship.",
+    referral: 95, referralNote: "Very open — GSF's model is explicitly designed to connect founders with VCs; co-invests frequently.",
+    intro: "Direct — Alok Goyal is already a GSF VC Mentor. Easiest warm intro on the list.",
+    linkedin: "https://in.linkedin.com/in/rajeshgsf"
+  },
+  {
+    rank: 4, name: "Aditya Arora", org: "Faad Capital / Faad Network", role: "Founder, Faad Network", tier: "t1",
+    persona: "micro-vc", location: "East Delhi",
+    sectors: ["Enterprise Apps", "Healthcare", "Deeptech", "Fintech", "Retail"], stage: "Pre-seed, Seed",
+    why: "SEBI-registered Cat-1 Angel Fund with Rs 300 Cr corpus. 129+ portfolio companies including Swiggy, Blu-Smart, Battery Smart, GalaxEye. Regular FAAD Investor Meet events in Delhi. 350+ member network of HNIs and VCs.",
+    evidence: "129+ investments, co-invested alongside 1,220 investors. GalaxEye $4.8M Series A (Mar 2026). Revenue Rs 2.27 Cr (FY2025). Highly active NCR-based deployer.",
+    referral: 93, referralNote: "Very high — angel network model explicitly seeks larger VCs for follow-on rounds.",
+    intro: "Shared portfolio overlaps; FAAD Investor Meet events; IAN co-investment network.",
+    linkedin: "https://in.linkedin.com/in/thefaadguy"
+  },
+  {
+    rank: 5, name: "Alok Mittal", org: "IAN + TiE Delhi-NCR + Indifi", role: "Co-founder, IAN; President, TiE Delhi-NCR; Co-founder & Executive Chairman, Indifi", tier: "t1",
+    persona: "angel", location: "Gurugram",
+    sectors: ["Fintech", "Consumer Internet", "Enterprise SaaS", "Edtech", "Gaming"], stage: "Seed, Pre-Series A",
+    why: "Sits at the intersection of the three most important Delhi NCR nodes: IAN (largest angel network), TiE Delhi-NCR (largest entrepreneur community), and Indifi (SME fintech). 64 companies in his angel portfolio including Pine Labs, Zupee, CarTrade.",
+    evidence: "Latest investment: Cleevo (May 2025). IAN invested in Rymo Technologies and Artment (March 2026). 25+ year ecosystem presence. IIT Delhi + UC Berkeley.",
+    referral: 90, referralNote: "Very open — angel investors and TiE presidents are inherently collaborative with institutional VCs.",
+    intro: "TiE Delhi-NCR events; IAN co-investment; Plaksha University (shared with Stellaris's Alok Goyal, also Plaksha co-founder).",
+    linkedin: "https://in.linkedin.com/in/alok-mittal"
+  },
+  {
+    rank: 6, name: "Padmaja Ruparel", org: "Indian Angel Network", role: "Co-Founder, IAN & Founding Partner, IAN Fund", tier: "t1",
+    persona: "network", location: "Delhi NCR",
+    sectors: ["All sectors", "Consumer", "SaaS", "Healthtech", "Fintech"], stage: "Angel, Seed, Pre-Series A",
+    why: "IAN is India's largest angel network with 500+ members and visibility into hundreds of early-stage deals annually. IAN Fund bridges angel and VC stages. IAN co-invests frequently with Delhi family offices. Naturally feeds deal flow to downstream VCs.",
+    evidence: "IAN consistently active 2024–2026 with investments across sectors. Co-invested with Yukti Securities. Speaker at TiE Capital Connect 2025. Speaker at multiple 2025–26 conferences.",
+    referral: 90, referralNote: "Very high — IAN's model is built on syndication and connecting founders with follow-on investors.",
+    intro: "TiE Delhi-NCR; IAN-Stellaris co-investment history; Alok Mittal shared network.",
+    linkedin: "https://in.linkedin.com/in/padmaja-ruparel-a3b555"
+  },
+  {
+    rank: 7, name: "Sohil Chand", org: "Yukti Securities (Chand Family Office)", role: "CIO, LC Nueva AIF & Principal, Yukti Securities", tier: "t1",
+    persona: "family-office", location: "Defence Colony, New Delhi",
+    sectors: ["Enterprise Apps", "Retail", "Consumer", "Food & Agriculture", "Fintech"], stage: "Seed, Series A",
+    why: "49 investments, 2 unicorns (InCred, Infra.Market), 5 IPOs. Former founding team at Norwest Venture Partners India and Goldman Sachs — understands VC co-investment natively. Portfolio includes Atlan, Redcliffe Labs, Ripplr, Biryani By Kilo.",
+    evidence: "Recent: OOGE (seed 2025), Namdev Finvest. Stated openness in 2025 Trica Capital interview. Co-invests frequently through IAN.",
+    referral: 88, referralNote: "Very high — ex-VC professional, actively seeks co-investment, has explicitly stated openness to partnerships.",
+    intro: "IAN co-investment; Trica Capital network; portfolio company overlap.",
+    linkedin: "https://in.linkedin.com/in/sohil-chand"
+  },
+  {
+    rank: 8, name: "Akshat Goenka", org: "AG Ventures", role: "Managing Partner & Co-Founder, AG Ventures", tier: "t1",
+    persona: "family-office", location: "South Delhi / Noida",
+    sectors: ["D2C Consumer", "Healthtech", "Sustainability", "Frontier Tech"], stage: "Seed → Series A",
+    why: "45+ startup investments since 2022 AND LP positions in 10+ VC funds. Portfolio includes Bira91, Blue Tokai, Neemans, Agnikul Cosmos, Vyapar, ShareChat. 1 unicorn exit. Open-architecture investor who actively co-invests with institutional VCs.",
+    evidence: "UPenn + Harvard OPM background. Takes LP positions in VC funds — naturally aligned to VC relationships. Active 2024–2025 dealflow.",
+    referral: 90, referralNote: "Very high — LP in VC funds and seeks co-investment; maximally aligned with Stellaris.",
+    intro: "Shared VC LP networks; portfolio company overlap; Delhi family office circles.",
+    linkedin: "https://in.linkedin.com/in/akshat-goenka-91223b16b"
+  },
+  {
+    rank: 9, name: "Geetika Dayal", org: "TiE Delhi-NCR", role: "Director General, TiE Delhi-NCR", tier: "t1",
+    persona: "community", location: "Noida (TiE HQ, Sector 142)",
+    sectors: ["All sectors", "D2C", "Manufacturing", "Deeptech", "AI"], stage: "All early stages",
+    why: "The single most powerful institutional connector in Delhi NCR. TiE Delhi-NCR is 'the largest and most vibrant chapter across the vast TiE network' with 11,000+ members. Runs TiEcon Delhi (1,000+ delegates, 50+ investors). Capital Connect program specifically matches startups with investors.",
+    evidence: "23+ years running Delhi NCR's most active entrepreneur network. Promoted to Director General June 2024. Annual TiEcon, HR Summit, D2C Summit, and Startup as a Service programs.",
+    referral: 92, referralNote: "Very high — TiE's core mission is connecting startups with investors and mentors.",
+    intro: "TiEcon Delhi; Capital Connect 2025; Alok Mittal (TiE President) shared network.",
+    linkedin: "https://in.linkedin.com/in/geetika-dayal-9a4b04299"
+  },
+  {
+    rank: 10, name: "Dr. Nikhil Agarwal", org: "FITT, IIT Delhi", role: "Managing Director, Foundation for Innovation & Technology Transfer", tier: "t1",
+    persona: "incubator", location: "IIT Delhi, Hauz Khas",
+    sectors: ["Deeptech", "AI/ML", "Defence", "Sustainability", "Healthcare"], stage: "Pre-seed → Growth",
+    why: "FITT has incubated 280+ startups and facilitated Rs 450+ Cr in cumulative funding. Runs Unnati AI Accelerator (Microsoft), DriftTECH deep-tech program, Green Tech Accelerator (25 startups/cohort). Alumni: Vehant Technologies, BotLab Dynamics, CYRAN AI.",
+    evidence: "FITT Forward 2025 national summit. Investment Nexus events directly connect startups to VCs. 10,000+ stakeholders annually.",
+    referral: 88, referralNote: "Very high — FITT actively runs VC-startup matchmaking events and welcomes institutional investors.",
+    intro: "FITT Forward summit; Investment Nexus events; IIT Delhi alumni network.",
+    linkedin: "https://in.linkedin.com/company/fittiitdelhi"
+  },
+  {
+    rank: 11, name: "Karan Malhotra", org: "StartupFino", role: "Founder, StartupFino", tier: "t1",
+    persona: "professional", location: "Delhi NCR",
+    sectors: ["Logistics", "Fintech", "SaaS", "D2C", "Cross-sector"], stage: "Pre-seed → Series B",
+    why: "300+ startups served including Shadowfax (early stage through multiple VC rounds). Already works with VC portfolio companies — a VC partner has publicly testified to this. Handles incorporation, cap tables, ESOPs, due diligence. Sees founders at day zero.",
+    evidence: "Shadowfax (IPO'd 2025), Truelancer in portfolio. VC partner testimonial on website. 10 year track record. Cross-sector exposure is uniquely broad.",
+    referral: 92, referralNote: "Very high — already works with VCs and understands referral dynamics. Startup-native mindset.",
+    intro: "Direct outreach; shared portfolio companies (Shadowfax network); VC partnerships.",
+    linkedin: "https://www.linkedin.com/in/karanmalhotra-startupfino"
+  },
+  {
+    rank: 12, name: "Nitin Wadhwa", org: "Wadhwa Law Offices", role: "Founder & Managing Partner", tier: "t1",
+    persona: "professional", location: "Gurugram (DLF Corporate Park, MG Road)",
+    sectors: ["Technology", "Energy", "Gaming", "SaaS"], stage: "Seed → Growth",
+    why: "Chambers-ranked for Venture Capital in India. India Business Law Journal A-List (2023–24). Advises both founders AND funds — sees founders preparing to raise before deals are announced. Structured deals for TrusTrace ($24M), Freyr Energy. Boutique firm with deep personal relationships.",
+    evidence: "Chambers Asia-Pacific recognition 2024. IBLJ Top 100 Lawyers ranking. Active VC transaction practice with publicly listed deals.",
+    referral: 85, referralNote: "High — works both sides of VC transactions and understands deal-sourcing value.",
+    intro: "Bar associations; VC-lawyer co-advising; Chambers alumni network.",
+    linkedin: "https://www.linkedin.com/in/nitin-wadhwa-93787a6/"
+  },
+  {
+    rank: 13, name: "Abhas Gupta", org: "Burman Capital Management (Dabur Family)", role: "Chief Investment Officer, Burman Capital Management", tier: "t1",
+    persona: "family-office", location: "New Delhi (Express Building)",
+    sectors: ["Healthcare", "Financial Services", "Consumer Brands", "Fintech", "Healthtech"], stage: "Seed, Series A",
+    why: "Burman Family Holdings has invested $500M+ over 20 years in 44 companies. Proactive deal searchers with 10–30 year patient capital horizon. Portfolio includes Policybazaar (unicorn), 6 IPOs. Recent: Lighthouse Proptech (Seed, March 2025).",
+    evidence: "Active New Delhi hiring for investment associates (2025) confirms ongoing deployment. Dabur healthcare legacy gives unique healthtech insight. $500M track record.",
+    referral: 80, referralNote: "Moderate-high — best approached with co-investment opportunities where Stellaris leads.",
+    intro: "TiE Delhi-NCR (Dabur family active members); healthcare/pharma ecosystem connections.",
+    linkedin: "https://www.linkedin.com/in/abhas-gupta-b04b4414/"
+  },
+  {
+    rank: 14, name: "Anuj Bali", org: "AnBac Advisors", role: "Founder, AnBac Advisors", tier: "t1",
+    persona: "professional", location: "Gurugram (Baani Address One, Sector 56)",
+    sectors: ["Technology", "FMCG", "Blockchain", "F&B", "Cross-sector"], stage: "Pre-seed → Growth",
+    why: "2,000+ companies advised since 2013. Full-service virtual CFO + legal + due diligence + fundraising advisory. Startups come to AnBac before they approach VCs for financial modeling and valuations. 300+ employee team. Expanded to Dubai and Bengaluru.",
+    evidence: "CNN Budget commentary (2023). Featured in startup media for early-stage advisory. Consistent market presence across Delhi NCR startup ecosystem.",
+    referral: 88, referralNote: "High — directly helps startups prepare for fundraising; sees pre-raise founders.",
+    intro: "Startup events; co-referral relationship; shared portfolio company advisory.",
+    linkedin: "https://www.linkedin.com/in/anuj-bali/"
+  },
+  // TIER 2
+  {
+    rank: 15, name: "Ashish Taneja", org: "growX Ventures", role: "Founding Partner & CEO, growX Ventures", tier: "t2",
+    persona: "micro-vc", location: "Delhi",
+    sectors: ["B2B", "Deeptech", "Defence Tech", "Space Tech", "AI", "Supply Chain"], stage: "Seed → Series B",
+    why: "80+ investments over 15 years; notable exits include Locus (41x), Fynd (4x to Reliance), Quandl (5x to Nasdaq). Recent: Armory (Jun 2025), Ulook (Nov 2025). Sector differentiation creates complementarity — when growX sees consumer/fintech deals outside their thesis, those can be referred to Stellaris.",
+    evidence: "Consistent activity through 2025. Fund II targeting Rs 400 Cr (~$50M). 15-year NCR track record.",
+    referral: 78, referralNote: "High — sector differentiation from Stellaris reduces competition; B2B/deeptech focus is complementary.",
+    intro: "Shared portfolio company events; deeptech investor network; co-investment opportunities.",
+    linkedin: "https://in.linkedin.com/in/ataneja"
+  },
+  {
+    rank: 16, name: "Kunal Bahl & Rohit Bansal", org: "Titan Capital", role: "Co-founders, Titan Capital & Snapdeal/AceVector Group", tier: "t2",
+    persona: "angel", location: "Gurugram",
+    sectors: ["Consumer", "SaaS", "Fintech", "Logistics", "Marketplaces", "Healthtech"], stage: "Angel/Seed",
+    why: "280+ startup investments including Razorpay, Urban Company, Ola, Mamaearth, Shadowfax (IPO'd). Titan co-invested with Stellaris previously (Mamaearth). Rohit Bansal's IIT Delhi network is a specific asset.",
+    evidence: "Mamaearth co-investment. Winners Fund Rs 333 Cr for follow-on. Kunal on Shark Tank India S4 (active ecosystem participant).",
+    referral: 75, referralNote: "Mostly collaborative — personal capital without fund-life constraints. Rohit Bansal is more accessible than Kunal for relationship-building.",
+    intro: "Mamaearth co-investment relationship (existing). Bipin Shah (Zeropearl) is ex-Titan — bridge connection.",
+    linkedin: "https://in.linkedin.com/in/rohitkbansal"
+  },
+  {
+    rank: 17, name: "Sahil Barua", org: "Delhivery", role: "Co-founder & CEO, Delhivery; Independent Director, Swiggy", tier: "t2",
+    persona: "angel", location: "Gurugram",
+    sectors: ["Logistics", "Supply Chain", "D2C Brands", "Consumer Commerce"], stage: "Seed, Series A",
+    why: "23 angel investments including The Souled Store, Nestasia, BeepKart, Vidyut. Built India's most successful logistics company — unique insight into commerce/D2C startup evaluation. IIM Bangalore + Bain alumni network.",
+    evidence: "Nestasia is in both Sahil's portfolio and Stellaris's portfolio — direct warm intro path exists.",
+    referral: 72, referralNote: "Moderate-high — credible public company CEO but not celebrity-inaccessible.",
+    intro: "Nestasia shared investment — use the common portfolio connection directly.",
+    linkedin: "https://in.linkedin.com/in/sahilbarua"
+  },
+  {
+    rank: 18, name: "Ashutosh Dutt Sharma", org: "IHFC, IIT Delhi", role: "CEO, I-Hub Foundation for Cobotics", tier: "t2",
+    persona: "incubator", location: "IIT Delhi campus",
+    sectors: ["Robotics", "AI", "Healthcare", "Agriculture", "Defence", "Industry 4.0", "Drones"], stage: "Seed → Growth",
+    why: "Runs Pitch Perfect flagship pitching initiative, READY deep-tech program, 10 Co-Innovation Centres nationwide. Partners include Seafund, Fluid Ventures, Google for Startups. Dozens of deep-tech startups incubated.",
+    evidence: "Pitch Perfect 2.0 launch (Nov 2025). IHFC-IIT Delhi Innovation Centre collaboration with 10 institutions (2025). Active deep-tech pipeline.",
+    referral: 78, referralNote: "Very high — explicitly hosts pitching sessions with VC panels.",
+    intro: "FITT IIT Delhi connection (same campus); VC panel invitations; IHFC investor events.",
+    linkedin: "https://in.linkedin.com/company/ihfc-iitd"
+  },
+  {
+    rank: 19, name: "Anupam Saronwala", org: "IIITD Innovation & Incubation Center + IAN + TiE", role: "Board Director, IIITD-IC; Angel Investor; TiE Charter Member; NASSCOM DeepTech Mentor", tier: "t2",
+    persona: "incubator", location: "New Delhi (IIIT Delhi, Okhla)",
+    sectors: ["AI", "Cybersecurity", "Data Science", "Robotics", "Drones"], stage: "Ideation → Early revenue",
+    why: "Bridges IAN, TiE Delhi-NCR, NASSCOM DeepTech, and IIIT Delhi's startup pipeline. 30+ years industry experience (IBM Research). IIITD-IC supports startups in AI, cybersecurity, and drone tech.",
+    evidence: "NIDHI PRAYAS grants and Startup India Seed Fund administration. Multi-network access across all major Delhi NCR startup communities.",
+    referral: 80, referralNote: "High — active angel investor who co-invests and facilitates warm intros.",
+    intro: "IAN co-investment; TiE Delhi-NCR events; direct LinkedIn (public profile).",
+    linkedin: "https://www.linkedin.com/in/anupamsaronwala/"
+  },
+  {
+    rank: 20, name: "Sheeba Khan", org: "AIC Shiv Nadar University", role: "CEO, Atal Incubation Centre, Shiv Nadar University", tier: "t2",
+    persona: "incubator", location: "Greater Noida (SNU campus)",
+    sectors: ["Deeptech", "EV", "Renewable Energy", "AI/ML", "Biotech"], stage: "Ideation → Early revenue",
+    why: "100+ startups supported, Rs 6+ Cr in grants facilitated. Annual Venture Challenge receives 366 applications per cohort. Formal partnerships with IAN, 100X.VC, and Agility Ventures for investor connections.",
+    evidence: "Venture Challenge 6.0 (2025, 28 startups selected). Access to 154 labs and 9 research centers. Active cohort-based program.",
+    referral: 78, referralNote: "High — actively partners with VC networks and invites VCs to Demo Days.",
+    intro: "IAN partnership; 100X.VC co-network; Noida startup ecosystem events.",
+    linkedin: "https://in.linkedin.com/in/sheebaahmed"
+  },
+  {
+    rank: 21, name: "Pranay Gupta", org: "91springboard + 91Ventures", role: "Co-Founder, 91springboard; Former Joint CEO, CIIE (IIM-A)", tier: "t2",
+    persona: "community", location: "Delhi (multiple hubs across Delhi, Gurgaon, Noida)",
+    sectors: ["Tech/SaaS", "Consumer", "Cross-sector"], stage: "Seed, Pre-seed",
+    why: "Sits at intersection of coworking (25,000+ professionals, 28 hubs), angel investing (91Ventures syndicate), and incubation (NITI Aayog program, 150 startups). IIT Delhi + IIM Ahmedabad alumnus.",
+    evidence: "Publicly stated desire to 'meet founders to explore investment opportunities and brainstorm ideas with investors/VCs.' 91springboard hubs are first home for many NCR startups.",
+    referral: 82, referralNote: "Very high — actively co-invests with VCs, runs a syndicate, and seeks VC relationships.",
+    intro: "IIT Delhi alumni shared network; 91springboard portfolio companies; CIIE/IIM-A connection.",
+    linkedin: "https://in.linkedin.com/in/pranaygupta"
+  },
+  {
+    rank: 22, name: "Ankush Chandgothia", org: "Mankind Pharma Family Office", role: "Head, Mankind Group Family Office", tier: "t2",
+    persona: "family-office", location: "New Delhi (Mankind Pharma HQ)",
+    sectors: ["Consumer Brands", "Clean Energy", "Healthtech", "Fintech"], stage: "Series A primarily",
+    why: "Mankind Pharma is a $6.9B family (Ramesh & Rajeev Juneja). Chandgothia publicly stated that direct startup deals will 'significantly increase.' Investments include Zepto, Batx Energies, Vitraya. Speaker at TiE Delhi-NCR Capital Connect 2025.",
+    evidence: "Inc42 profile (2023). Confirmed TiE Capital Connect 2025 speaker. Investments in Zepto and Batx Energies confirmed.",
+    referral: 70, referralNote: "High — actively scouting deals, bullish on direct investing.",
+    intro: "TiE Delhi-NCR (Capital Connect speaker); pharma/healthcare founder network.",
+    linkedin: "https://in.linkedin.com/in/ankush-chandgothia"
+  },
+  {
+    rank: 23, name: "Sheena Ogra", org: "Ahlawat & Associates", role: "Partner, Ahlawat & Associates", tier: "t2",
+    persona: "professional", location: "New Delhi (Okhla Phase III)",
+    sectors: ["Technology", "E-sports", "FDI-linked Startups", "Fintech"], stage: "Seed → Series B",
+    why: "Legal 500 Recommended Lawyer. Full-service Delhi firm with deep startup practice. Publicly referenced advising an e-sports streaming platform through multiple rounds (seed to pre-Series B). Publishes ESOP structuring content for startups.",
+    evidence: "Ahlawat & Associates is an established startup law firm with PE/VC practice. Legal 500 ranking confirms deal flow visibility.",
+    referral: 75, referralNote: "High — senior partner who sees founders at incorporation and fundraising stages.",
+    intro: "VC-lawyer co-advising relationships; Delhi legal community events.",
+    linkedin: "https://in.linkedin.com/company/ahlawat-associates"
+  },
+  {
+    rank: 24, name: "Neha Lal", org: "Shrofile Executive Search", role: "Founder & CEO, Shrofile Executive Search", tier: "t2",
+    persona: "professional", location: "Gurgaon (Ocus Quantum)",
+    sectors: ["Tech", "Retail", "Manufacturing", "NBFC", "Cross-sector"], stage: "Early → Growth stage",
+    why: "100% startup-focused executive search firm. 20+ years HR leadership (Aon Hewitt, Nomura, Genpact). 30,000+ profiles, 30+ startup clients. Sees hiring patterns across early-stage companies — a strong signal of which startups are scaling. VC portfolio companies are natural clients.",
+    evidence: "Explicitly '100% startup-focused' positioning. 20+ years experience. LinkedIn presence confirms active Gurgaon base.",
+    referral: 75, referralNote: "High — natural incentive alignment; VC portfolio companies are potential clients.",
+    intro: "Gurgaon startup HR network; direct outreach via LinkedIn.",
+    linkedin: "https://in.linkedin.com/in/nehashrofile"
+  },
+  {
+    rank: 25, name: "Shantanu Deshpande", org: "Bombay Shaving Company", role: "CEO & Co-founder, Bombay Shaving Company; Angel Investor", tier: "t2",
+    persona: "angel", location: "Gurgaon",
+    sectors: ["Consumer Brands", "D2C", "Beauty", "Food & Beverages"], stage: "Pre-seed, Seed",
+    why: "Gurgaon-based consumer brand founder who encounters pitches from other founders before VCs. Investments in Moxie Beauty, Better Nutrition, other consumer startups. Pure angel — fully collaborative, not running a competing fund.",
+    evidence: "Active consumer brand investment thesis. Gurgaon-based NCR founder with strong D2C network. Public LinkedIn activity confirms angel investments.",
+    referral: 85, referralNote: "Very high — would welcome co-investment from Stellaris. No competitive dynamics.",
+    intro: "Consumer brand founder network; D2C Summit TiE; shared portfolio companies.",
+    linkedin: "https://in.linkedin.com/in/shantanudeshpande"
+  },
+  {
+    rank: 26, name: "Dr. Priyank Narayan", org: "Ashoka University (InfoEdge Centre for Entrepreneurship)", role: "Associate Professor & Founding Director, InfoEdge CfE, Ashoka University", tier: "t2",
+    persona: "incubator", location: "Sonipat, Haryana (NCR)",
+    sectors: ["Consumer", "Social Enterprise", "Fintech", "Edtech"], stage: "Pre-idea to Early stage",
+    why: "Ashoka produces highly talented, well-connected graduates. Runs Startup Ashoka (annual competition), AIM Smart City Accelerator. InfoEdge (Naukri.com) backing by Sanjeev Bikhchandani gives significant credibility. Connected to Cambridge fellowship and Global Entrepreneurship Network.",
+    evidence: "InfoEdge Centre for Entrepreneurship formally established. Active courses + competitions confirmed through Ashoka website. CfE partnership with Sanjeev Bikhchandani / InfoEdge.",
+    referral: 75, referralNote: "High — CfE is designed to connect student founders with investors.",
+    intro: "InfoEdge / Sanjeev Bikhchandani connection; Ashoka ecosystem events.",
+    linkedin: "https://in.linkedin.com/in/priyankn"
+  },
+  {
+    rank: 27, name: "Akshay Mittal", org: "Starters' CFO", role: "Co-Founder, Starters' CFO", tier: "t2",
+    persona: "professional", location: "New Delhi (Model Town)",
+    sectors: ["Fintech", "Edtech", "Healthtech", "D2C", "Logistics", "SaaS"], stage: "Seed, First/Second stage",
+    why: "Specializes in making startups 'funding ready' — financial projections, unit economics, investor-ready MIS reports. Explicitly targets startups that have been turned away by investors due to financial reporting gaps. Ex-KPMG CAs. Sees founders at the pre-fundraise stage.",
+    evidence: "Startup-specific service positioning. New Delhi base confirmed. CA/financial advisory background.",
+    referral: 78, referralNote: "High — directly prepares startups for fundraising; pre-raise visibility.",
+    intro: "Startup finance community; CA network; referral relationship with complementary service providers.",
+    linkedin: "https://in.linkedin.com/in/akshay-mittal-cfo"
+  },
+  {
+    rank: 28, name: "Utsav Somani", org: "iSeed", role: "Founder, iSeed (Micro-VC); Former Partner, AngelList India", tier: "t2",
+    persona: "micro-vc", location: "Delhi",
+    sectors: ["Fintech", "Consumer", "SaaS", "Enterprise Apps", "Cross-sector"], stage: "Pre-seed, Seed",
+    why: "Delhi-based micro-VC who built and ran AngelList India — giving him visibility into virtually every early-stage deal being syndicated in the country. iSeed portfolio includes BharatPe, Jupiter, Pristyn Care, Park+, CoinDCX. Most recent: Grexa (Jul 2025). His syndicate model means he sees deals 6–12 months before most VCs.",
+    evidence: "Tracxn: 'angel investor based out of Delhi, India.' Most recent investment Grexa (Jul 2025). AngelList India history gives unmatched deal flow visibility across NCR.",
+    referral: 88, referralNote: "Very high — iSeed's model is explicitly pre-seed, Stellaris is seed/Series A. Zero competitive overlap, high referral incentive.",
+    intro: "AngelList India network; shared portfolio companies (BharatPe, Jupiter); Delhi angel ecosystem.",
+    linkedin: "https://in.linkedin.com/in/utsavsomani"
+  }
+];
+
+// Persona color map
+const personaColors = {
+  "angel": "#c084fc",
+  "micro-vc": "#f97316",
+  "incubator": "#38bdf8",
+  "community": "#4ade80",
+  "professional": "#fb7185",
+  "family-office": "#fbbf24",
+  "network": "#a78bfa",
+};
+
+const personaLabels = {
+  "angel": "Angel / Founder-Angel",
+  "micro-vc": "Micro-VC",
+  "incubator": "Incubator / Accelerator",
+  "community": "Community Builder",
+  "professional": "Lawyer / CFO",
+  "family-office": "Family Office",
+  "network": "Angel Network",
+};
+
+// Group by persona for section headers
+const personaOrder = ["angel", "micro-vc", "family-office", "incubator", "community", "professional", "network"];
+
+let activeFilter = 'all';
+let activeTier = 'all';
+let activePersona = 'all-personas';
+let activeCard = null;
+let searchTerm = '';
+
+function renderCards() {
+  const cardArea = document.getElementById('card-area');
+  cardArea.innerHTML = '<div class="no-results" id="no-results">No contacts match your filters.</div>';
+
+  const grouped = {};
+  personaOrder.forEach(p => grouped[p] = []);
+
+  people.forEach(p => {
+    if (grouped[p.persona]) grouped[p.persona].push(p);
+    else grouped['angel'].push(p);
+  });
+
+  let totalShown = 0;
+
+  personaOrder.forEach(persona => {
+    const group = grouped[persona];
+    if (group.length === 0) return;
+
+    const sectionEl = document.createElement('div');
+    sectionEl.dataset.persona = persona;
+
+    const header = document.createElement('div');
+    header.className = 'section-header';
+    header.innerHTML = `
+      <div class="section-title" style="color: ${personaColors[persona]}">${personaLabels[persona]}</div>
+      <div class="section-line"></div>
+      <div class="section-count" id="count-${persona}"></div>
+    `;
+    sectionEl.appendChild(header);
+
+    const grid = document.createElement('div');
+    grid.className = 'cards';
+
+    group.forEach(person => {
+      const card = document.createElement('div');
+      card.className = `card ${person.tier}`;
+      card.dataset.name = person.name.toLowerCase();
+      card.dataset.org = person.org.toLowerCase();
+      card.dataset.sectors = person.sectors.join(' ').toLowerCase();
+      card.dataset.persona = person.persona;
+      card.dataset.tier = person.tier;
+      card.dataset.rank = person.rank;
+
+      card.innerHTML = `
+        <div class="card-top">
+          <span class="card-rank">#${person.rank}</span>
+          <span class="tier-badge ${person.tier}">${person.tier === 't1' ? 'Tier 1' : 'Tier 2'}</span>
+        </div>
+        <div class="card-name">${person.name}</div>
+        <div class="card-role">${person.org}</div>
+        <div class="card-tags">
+          <span class="tag persona" style="background: ${personaColors[person.persona]}18; color: ${personaColors[person.persona]}; border-color: ${personaColors[person.persona]}30">${personaLabels[person.persona]}</span>
+          ${person.sectors.slice(0, 2).map(s => `<span class="tag">${s}</span>`).join('')}
+          <span class="tag">${person.stage}</span>
+        </div>
+        <div class="card-key-line">${person.why.substring(0, 100)}…</div>
+      `;
+
+      card.addEventListener('click', () => selectCard(person, card));
+      grid.appendChild(card);
+    });
+
+    sectionEl.appendChild(grid);
+    cardArea.appendChild(sectionEl);
+  });
+
+  applyFilters();
+}
+
+function applyFilters() {
+  const cards = document.querySelectorAll('.card');
+  let shown = 0;
+  const sectionCounts = {};
+
+  cards.forEach(card => {
+    const matchSearch = !searchTerm ||
+      card.dataset.name.includes(searchTerm) ||
+      card.dataset.org.includes(searchTerm) ||
+      card.dataset.sectors.includes(searchTerm);
+
+    const tierMap = { 'tier-1': 't1', 'tier-2': 't2' };
+    const matchTier = activeTier === 'all' || card.dataset.tier === tierMap[activeTier];
+    const matchPersona = activePersona === 'all-personas' || card.dataset.persona === activePersona;
+
+    const visible = matchSearch && matchTier && matchPersona;
+    card.classList.toggle('hidden', !visible);
+
+    if (visible) {
+      shown++;
+      sectionCounts[card.dataset.persona] = (sectionCounts[card.dataset.persona] || 0) + 1;
+    }
+  });
+
+  // Update section visibility
+  personaOrder.forEach(persona => {
+    const countEl = document.getElementById(`count-${persona}`);
+    const sectionEl = document.querySelector(`[data-persona="${persona}"].section-header`)?.parentElement;
+    const count = sectionCounts[persona] || 0;
+
+    if (countEl) countEl.textContent = `${count}`;
+
+    if (sectionEl) {
+      sectionEl.style.display = count === 0 ? 'none' : '';
+    }
+  });
+
+  document.getElementById('result-count').textContent = `${shown} shown`;
+  document.getElementById('no-results').style.display = shown === 0 ? 'block' : 'none';
+}
+
+function selectCard(person, cardEl) {
+  document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+  cardEl.classList.add('active');
+  activeCard = person;
+
+  document.getElementById('detail-empty').style.display = 'none';
+  const content = document.getElementById('detail-content');
+  content.classList.add('visible');
+
+  const color = personaColors[person.persona];
+  const referralWidth = person.referral;
+
+  content.innerHTML = `
+    <div class="detail-eyebrow">#${person.rank} · ${personaLabels[person.persona]}</div>
+    <div class="detail-name">${person.name}</div>
+    <div class="detail-role">${person.role}<br><span style="opacity:0.5; font-size:11px">📍 ${person.location}</span></div>
+
+    <div class="detail-section">
+      <div class="detail-section-label">Organization</div>
+      <div class="detail-section-value">${person.org}</div>
+    </div>
+
+    <div class="detail-section">
+      <div class="detail-section-label">Why valuable for deal sourcing</div>
+      <div class="detail-section-value">${person.why}</div>
+    </div>
+
+    <div class="detail-section">
+      <div class="detail-section-label">Evidence of early-stage access</div>
+      <div class="detail-section-value">${person.evidence}</div>
+    </div>
+
+    <div class="detail-section">
+      <div class="detail-section-label">Sector strength</div>
+      <div class="detail-tags">${person.sectors.map(s => `<span class="detail-tag">${s}</span>`).join('')}</div>
+    </div>
+
+    <div class="detail-section">
+      <div class="detail-section-label">Stage access</div>
+      <div class="detail-section-value highlight">${person.stage}</div>
+    </div>
+
+    <div class="detail-section">
+      <div class="detail-section-label">Referral openness — ${person.referral}%</div>
+      <div class="referral-bar"><div class="referral-fill" style="width: ${referralWidth}%"></div></div>
+      <div class="detail-section-value" style="margin-top: 8px; font-size: 12px;">${person.referralNote}</div>
+    </div>
+
+    <div class="detail-section">
+      <div class="detail-section-label">Best warm intro path</div>
+      <div class="intro-path">${person.intro}</div>
+    </div>
+
+    <div class="detail-section">
+      <div class="detail-section-label">Priority tier</div>
+      <span class="tier-badge ${person.tier}" style="font-size: 12px; padding: 4px 12px;">${person.tier === 't1' ? '⭐ Tier 1 — Immediate priority' : '✦ Tier 2 — Build over time'}</span>
+    </div>
+
+    ${person.linkedin ? `<a href="${person.linkedin}" target="_blank" class="linkedin-btn">↗ LinkedIn Profile</a>` : ''}
+  `;
+}
+
+// Filter listeners
+document.querySelectorAll('[data-filter]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-filter]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeTier = btn.dataset.filter === 'all' ? 'all' : btn.dataset.filter;
+    applyFilters();
+  });
+});
+
+document.querySelectorAll('[data-persona]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-persona]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activePersona = btn.dataset.persona;
+    applyFilters();
+  });
+});
+
+document.getElementById('search').addEventListener('input', e => {
+  searchTerm = e.target.value.toLowerCase().trim();
+  applyFilters();
+});
+
+renderCards();
+</script>
+</body>
+</html>
